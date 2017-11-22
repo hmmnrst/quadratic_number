@@ -1,6 +1,9 @@
 require_relative '../quadratic_number'
 
-class Quadratic::Real # < Quadratic < Numeric
+##
+# Abstract class for <tt>Quadratic[d]</tt> (d > 0).
+#
+class Quadratic::Real
 	### Classification ###
 
 	# defined by Numeric:
@@ -21,6 +24,10 @@ class Quadratic::Real # < Quadratic < Numeric
 
 	### Comparisons ###
 
+	##
+	# @param [Object] other
+	# @return [+1/0/-1/nil]
+	#
 	def <=>(other)
 		if other.kind_of?(Numeric)
 			if other.real?
@@ -34,6 +41,10 @@ class Quadratic::Real # < Quadratic < Numeric
 		end
 	end
 
+	##
+	# @param [Object] other
+	# @return [Boolean]
+	#
 	def ==(other)
 		if other.kind_of?(Numeric) && other.real?
 			(self - other).to_f == 0
@@ -47,6 +58,16 @@ class Quadratic::Real # < Quadratic < Numeric
 	# defined by Numeric:
 	# * to_c #=> Complex.rect(self, 0)
 
+	##
+	# Returns a float.
+	# Prevents cancellations of significant digits.
+	#
+	# @return [Float]
+	#
+	# @example
+	#   -665857 + 470832 * Math.sqrt(2)        #=> -7.508788257837296e-07
+	#   Quadratic[2].new(-665857, 470832).to_f #=> -7.509119826032946e-07
+	#
 	def to_f
 		d = self.class::D
 		if @a * @b < 0
@@ -57,6 +78,22 @@ class Quadratic::Real # < Quadratic < Numeric
 			@a + @b * Math.sqrt(d)
 		end
 	end
+
+	##
+	# @!method to_r
+	# @return [Rational]
+	#
+
+	##
+	# @!method rationalize(eps)
+	# @param [Numeric] eps
+	# @return [Rational]
+	#
+
+	##
+	# @!method to_i
+	# @return [Integer]
+	#
 
 	[:to_r, :rationalize, :to_i].each do |sym|
 		define_method(sym) do |*args|

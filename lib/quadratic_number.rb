@@ -1,8 +1,31 @@
 require 'prime' # Prime.prime_division
 
+##
+# Base class.
+#
+# Users must specify a square-free integer to get a concrete class (see class method +.[]+).
+#
 class Quadratic < Numeric
 	@@classes = {}
 
+	# @!parse class Real < self; end
+
+	# @!parse class Imag < self; end
+
+	##
+	# Provides a concrete class.
+	#
+	# @param [Integer] d
+	# @return [Class]
+	# @raise [TypeError] if +d+ is not an integer.
+	# @raise [RangeError] if +d+ is not square-free.
+	#
+	# @example
+	#   Quadratic[2].ancestors.take(4)
+	#   #=> [Quadratic[2], Quadratic::Real, Quadratic, Numeric]
+	#   Quadratic[-1].ancestors.take(4)
+	#   #=> [Quadratic[-1], Quadratic::Imag, Quadratic, Numeric]
+	#
 	def self.[](d)
 		# return a memoized subclass if exists
 		return @@classes[d] if @@classes[d]
@@ -40,6 +63,13 @@ class Quadratic < Numeric
 	attr_reader :a, :b
 	protected   :a, :b
 
+	##
+	# Returns <tt>(a+b√d)</tt>.
+	#
+	# @example
+	#   phi   = Quadratic[5].new(1, 1) / 2     #=> ((1/2)+(1/2)*√5)
+	#   omega = Quadratic[-3].new(-1, 1) / 2   #=> ((-1/2)+(1/2)*√-3)
+	#
 	def initialize(a, b = 0)
 		unless [a, b].all? { |x| __rational__(x) }
 			raise TypeError, "not a rational"
@@ -51,6 +81,13 @@ class Quadratic < Numeric
 
 	### Basic arithmetic operations ###
 
+	##
+	# Performs type conversion.
+	#
+	# @param [Numeric] other
+	# @return [[Numeric, Numeric]] +other+ and +self+
+	# @raise [TypeError]
+	#
 	def coerce(other)
 		my_class = self.class
 		if other.kind_of?(my_class)
@@ -79,6 +116,12 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Performs addition.
+	#
+	# @param [Numeric] other
+	# @return [Quadratic[d]]
+	#
 	def +(other)
 		my_class = self.class
 		if other.kind_of?(my_class)
@@ -90,6 +133,12 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Performs subtraction.
+	#
+	# @param [Numeric] other
+	# @return [Quadratic[d]]
+	#
 	def -(other)
 		my_class = self.class
 		if other.kind_of?(my_class)
@@ -101,6 +150,12 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Performs multiplication.
+	#
+	# @param [Numeric] other
+	# @return [Quadratic[d]]
+	#
 	def *(other)
 		my_class = self.class
 		if other.kind_of?(my_class)
@@ -114,6 +169,12 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Performs division.
+	#
+	# @param [Numeric] other
+	# @return [Quadratic[d]]
+	#
 	def quo(other)
 		my_class = self.class
 		if other.kind_of?(my_class)
@@ -129,6 +190,12 @@ class Quadratic < Numeric
 	end
 	alias / quo
 
+	##
+	# Performs division.
+	#
+	# @param [Numeric] other
+	# @return [Float/Complex]
+	#
 	def fdiv(other)
 		if other.kind_of?(Quadratic)
 			self.to_builtin.fdiv(other.to_builtin)
@@ -140,6 +207,12 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Performs exponentiation.
+	#
+	# @param [Numeric] index
+	# @return [Quadratic[d]/Float/Complex]
+	#
 	def **(index)
 		unless index.kind_of?(Numeric)
 			num1, num2 = index.coerce(self)
@@ -194,6 +267,12 @@ class Quadratic < Numeric
 
 	### Comparisons ###
 
+	##
+	# Returns true if the two numbers are equal including their types.
+	#
+	# @param [Object] other
+	# @return [Boolean]
+	#
 	def eql?(other)
 		if other.kind_of?(self.class)
 			@a.eql?(other.a) && @b.eql?(other.b)
@@ -202,6 +281,11 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Returns a hash value.
+	#
+	# @return [Integer]
+	#
 	def hash
 		[@a, @b, self.class::D].hash
 	end
@@ -216,11 +300,21 @@ class Quadratic < Numeric
 
 	### Type conversions ###
 
+	##
+	# Convert to a bilt-in class' object.
+	#
+	# @return [Float/Complex]
+	#
 	def to_builtin
 		real? ? to_f : to_c
 	end
 	protected :to_builtin
 
+	##
+	# Returns a string.
+	#
+	# @return [String]
+	#
 	def inspect
 		'(' << __format__(:inspect) << ')'
 	end
@@ -228,12 +322,22 @@ class Quadratic < Numeric
 
 	### Utilities ###
 
+	##
+	# Returns its denominator.
+	#
+	# @return [Integer]
+	#
 	def denominator
 		ad = @a.denominator
 		bd = @b.denominator
 		ad.lcm(bd)
 	end
 
+	##
+	# Returns its numerator.
+	#
+	# @return [Quadratic[d]]
+	#
 	def numerator
 		an = @a.numerator
 		ad = @a.denominator
@@ -245,16 +349,31 @@ class Quadratic < Numeric
 
 	### Extensions for Quadratic ###
 
+	##
+	# Returns its quadratic conjugate.
+	#
+	# @return [Quadratic[d]]
+	#
 	def qconj
 		self.class.new(@a, -@b)
 	end
 	alias quadratic_conjugate qconj
 
+	##
+	# Returns its trace.
+	#
+	# @return [Integer/Rational]
+	#
 	def trace
 		# self + self.qconj
 		@a * 2
 	end
 
+	##
+	# Returns its norm.
+	#
+	# @return [Integer/Rational]
+	#
 	def norm
 		# self * self.qconj
 		@a * @a - @b * @b * self.class::D
@@ -262,6 +381,11 @@ class Quadratic < Numeric
 	alias qabs2 norm
 	alias quadratic_abs2 qabs2
 
+	##
+	# Returns its discriminant.
+	#
+	# @return [Integer/Rational]
+	#
 	def discriminant
 		# trace ** 2 - 4 * norm
 		@b * @b * (self.class::D * 4)
