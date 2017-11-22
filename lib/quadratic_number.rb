@@ -142,7 +142,7 @@ class Quadratic < Numeric
 
 	def **(index)
 		unless index.kind_of?(Numeric)
-			num1, num2 = other.coerce(self)
+			num1, num2 = index.coerce(self)
 			return num1 ** num2
 		end
 
@@ -162,7 +162,7 @@ class Quadratic < Numeric
 		end
 
 		# quadratic -> rational or integer / float or complex
-		if index.kind_of?(Quadratic) && index.b == 0
+		if index.kind_of?(Quadratic)
 			if index.b == 0
 				index = index.a
 			else
