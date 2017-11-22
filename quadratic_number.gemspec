@@ -3,12 +3,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "quadratic_number"
-  spec.version       = "0.0.1"
+  spec.version       = "0.0.2"
   spec.authors       = ["Masahiro Nomoto"]
   spec.email         = ["hmmnrst@users.noreply.github.com"]
 
   spec.summary       = %q{Quadratic class}
-  spec.description   = %q{Provides a numeric class Quadratic to represent a+b\u221ad exactly}
+  spec.description   = %q{Provides a numeric class Quadratic to represent a+b√d exactly}
   spec.homepage      = "https://github.com/hmmnrst/quadratic_number"
   spec.license       = "MIT"
 
