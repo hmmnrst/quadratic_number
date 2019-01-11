@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "quadratic_number"
-  spec.version       = "0.0.2"
+  spec.version       = "0.1.0"
   spec.authors       = ["Masahiro Nomoto"]
   spec.email         = ["hmmnrst@users.noreply.github.com"]
 
