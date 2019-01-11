@@ -265,6 +265,15 @@ class Quadratic < Numeric
 		end
 	end
 
+	##
+	# Returns negation of the value.
+	#
+	# @return [Quadratic[d]]
+	#
+	def -@
+		self.class.new(-@a, -@b)
+	end
+
 	### Comparisons ###
 
 	##

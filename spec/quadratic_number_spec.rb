@@ -88,6 +88,13 @@ RSpec.describe Quadratic do
 		end
 	end
 
+	describe "#-@" do
+		it "returns an additive inverse" do
+			num = Quadratic[5].new(1, 1) / 2
+			expect(-num).to eql(Quadratic[5].new(-1, -1) / 2)
+		end
+	end
+
 	describe "#qconj" do
 		it "returns a quadratic conjugate" do
 			num = Quadratic[5].new(1, 1) / 2
